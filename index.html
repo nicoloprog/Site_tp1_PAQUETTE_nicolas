@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="../1546960_PAQUETTE_nicolas_tp1/css/style.css">
+</head>
+<body>
+  <div id="app">
+    <video id="background-video" autoplay loop muted>
+      <source src="img/background.mp4" type="video/mp4">
+      </video>
+    <div class="formulaire" v-if="location == null">
+      <form name="form_meteo" @submit.prevent="actualiserMeteo">
+        <input type="text" name="city_name" v-model="city_name" placeholder="Ville">
+        <input type="text" name="country_code" v-model="country_code" placeholder="Pays">
+        <input type="submit" value="Suivre la météo de votre région">
+      </form>
+    </div>
+    <div class="location" v-if="location != null">
+      <img :src="url_icon + location.weather[0].icon + '.png'" alt="">
+      <h1>{{ Math.round(location.main.temp) }}°C</h1>
+      <h2>{{ location.name }} - {{ location.sys.country }}</h2>
+      <p>max: {{ Math.round(location.main.temp_max) }}°C / min: {{ Math.round(location.main.temp_min) }}°C</p>
+      <p class="prevision">{{ location.weather[0].description }}</p>
+      <p>Temp. ressenti: {{ Math.round(location.main.feels_like) }}°C</p>
+      <p>Vent: {{ Math.round(location.wind.speed*3.6) }} km/h - {{ getDirection(location.wind.deg) }}</p>
+      <p v-if="location.rain != null">Précipitation de pluie dans la dernière heure : {{ location.rain["1h"]*10 }} mm</p>
+      <p v-if="location.snow != null">Précipitation de neige dans la dernière heure : {{ location.snow["1h"] }} cm</p>
+      <p>Lever du soleil: {{new Date(location.sys.sunrise*1000).toTimeString().split(' ')[0].substring(0,5) }}</p>
+      <p>Coucher du soleil: {{new Date(location.sys.sunset*1000).toTimeString().split(' ')[0].substring(0,5) }}</p>
+      <p>Fuseau horaire: {{ location.timezone/3600 }}</p>
+      <button @click="location = null">Retour</button> 
+    </div>
+</div>
+  <script src="js/main.js" type="module"></script>
+</body>
+</html>
